@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed;
-    public GameObject explosionPrefab;
+    public float damage = 5;
     private Rigidbody2D rb;
     public void Awake()
     {
@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        FarToDestory(); //超过一定距离子弹就引爆
+        FarToDestory(); //The bullet detonates after traveling a certain distance.
     }
     public void SetSpeed(Vector2 direction)
     {
@@ -23,7 +23,8 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+       GameObject explosion= GameManager.instance.poolManager.Get(2);
+        explosion.transform.position = transform.position;
         gameObject.SetActive(false);
     }
 
@@ -33,7 +34,8 @@ public class Bullet : MonoBehaviour
         float distanceY = Mathf.Abs(GameManager.instance.player.transform.position.y - transform.position.y);
         if (distanceX > 10 || distanceY > 10)
         {
-            GameObject shell = GameManager.instance.poolManager.Get(2);
+            GameObject explosion = GameManager.instance.poolManager.Get(2);
+            explosion.transform.position = transform.position;
             gameObject.SetActive(false);
         }
 

@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
         Move();
     }
 
-    public void Move() //移动方法
+    public void Move() 
     {
 
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -43,7 +43,7 @@ public class Player : MonoBehaviour
         animator.SetFloat("VelocityX", Mathf.Abs(rb.velocity.x));
         animator.SetFloat("VelocityY", Mathf.Abs(rb.velocity.y));
     }
-    private void FlipByMouse()//玩家跟着鼠标进行转向方法
+    private void FlipByMouse()//Method for player to rotate towards the mouse
     {
         
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
             spriteRenderer.flipX = true;
         }
     }
-    private void Mousesign() //将游戏中的光标更换
+    private void Mousesign() //Change the cursor in game
     {
         Vector2 mousePoint = new Vector2(201, 201);
         Cursor.SetCursor(cursorTexture, mousePoint, CursorMode.Auto);

@@ -1,12 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rifle : MonoBehaviour
 {
-    [Header("variable")]
+    [Header("Variables")]
     public float interval;
-    private float timer;
+    private float shootTimer;
+    public  float maxReloadTime;
+    private float reloadTimer;
+    public int maxBulletNumber;
+    public int currentbulletNumber;
+    private bool isReload;
     private Vector2 mousePosition;
     private Vector2 direction;
     [Header("Components")]
@@ -25,16 +28,20 @@ public class Rifle : MonoBehaviour
 
     }
 
-    // Update is called once per frame
+    private void OnEnable()
+    {
+        currentbulletNumber = maxBulletNumber;
+    }
     private void Update()
     {
         
-        Direction(); //控制枪旋转方向
+        Direction(); //Control the rotation direction of the gun
     }
 
     private void FixedUpdate()
     {
-        Shoot(); //间隔射击系统,避免子弹腹泻式射击
+        if (!Reload())
+        Shoot(); //Cooldown shooting system to avoid rapid, continuous firing like a spray.
     }
 
     private void Direction() 
@@ -50,28 +57,47 @@ public class Rifle : MonoBehaviour
     }
     private void Shoot()
     {
-        if(timer!=0)
+        if(shootTimer != 0)
         {
-            timer-=Time.deltaTime;
-            if(timer<=0)
-                timer=0;
+            shootTimer -= Time.deltaTime;
+            if(shootTimer <= 0)
+                shootTimer = 0;
         }
         if(Input.GetMouseButton(0))
         {
-            if(timer==0)
+            if(shootTimer == 0)
             {
                 Fire();
-                timer = interval;
+                shootTimer = interval;
             }
         }
     }
     private void Fire()
     {
+        currentbulletNumber--;
         animator.SetTrigger("Shoot");
         GameObject bullet = GameManager.instance.poolManager.Get(0);
-        bullet.GetComponent<Bullet>().SetSpeed(direction);//调用bullet的飞行函数
+        bullet.GetComponent<Bullet>().SetSpeed(direction);//Call the flight function of the bullet
         bullet.transform.position= muzzle.position;
         GameObject shell=GameManager.instance.poolManager.Get(1);
         shell.transform.position = shellPosition.position;
+    }
+
+    private bool Reload()
+    {
+        if(currentbulletNumber <= 0)
+        {
+            isReload = true;
+            reloadTimer -= Time.deltaTime;
+            Debug.Log("IsReload");
+        }
+        if(reloadTimer <= 0)
+        {
+            reloadTimer= maxReloadTime;
+            isReload = false;
+            currentbulletNumber = maxBulletNumber;
+        }
+
+        return isReload;
     }
 }

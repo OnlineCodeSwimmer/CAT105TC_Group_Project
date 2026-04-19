@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BulletShell : MonoBehaviour
 {
-    public float ariSpeed; //与滞空时间成正比
+    public float ariSpeed; //Proportional to the air time.
     public float stopTime =0.5f;
     public float fadeSpeed = 0.01f;
     private Rigidbody2D rb;

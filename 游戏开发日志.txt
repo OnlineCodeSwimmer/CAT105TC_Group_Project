@@ -1,0 +1,4 @@
+2026/4/19 （Xing Zhang）
+1.Added the Reload System and Bullet System
+2.Transformed the Goblin monster into a fully functional attackable enemy
+3.Implemented ScriptableObjects to store monster data.
