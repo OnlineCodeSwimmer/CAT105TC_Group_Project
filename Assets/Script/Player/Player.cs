@@ -14,10 +14,16 @@ public class Player : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     public Texture2D cursorTexture;
+    [Header("Player Parameter")]
+    public float currentExp;
+    public float maxExp;
+    public int level;
 
 
     public void Awake()
     {
+        maxExp = 10;
+        level = 1;
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
@@ -62,7 +68,17 @@ public class Player : MonoBehaviour
         Vector2 mousePoint = new Vector2(201, 201);
         Cursor.SetCursor(cursorTexture, mousePoint, CursorMode.Auto);
     }
+    public void GetExp()
+    {
+        currentExp += 5;
+        if (currentExp == maxExp)
+        {
+            level++;
+            maxExp *= 2;
+            currentExp = 0;
+        }
 
+    }
 }
 
 

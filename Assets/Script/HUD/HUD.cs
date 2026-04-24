@@ -7,14 +7,20 @@ public class HUD : MonoBehaviour
 {
     public enum InfomationType
     {
-        Reload
+        Reload,
+        Exp,
+        Level,
+        Kill,
+        TotalTimer
     }
     public InfomationType type;
     private Text uiText;
+    private Slider uiSlider;
 
     private void Awake()
     {
        uiText = GetComponent<Text>();
+       uiSlider = GetComponent<Slider>();
     }
     private void LateUpdate()
     {
@@ -25,6 +31,24 @@ public class HUD : MonoBehaviour
                 int maxBullet = GameManager.instance.rifle.maxBulletNumber;
                 uiText.text = string.Format("{0}/{1}", currentBullet, maxBullet);
                 break;
+            case InfomationType.Exp:
+                float currentExp= GameManager.instance.player.currentExp;
+                float maxExp= GameManager.instance.player.maxExp;
+                uiSlider.value = currentExp / maxExp;
+                break;
+            case InfomationType.Level:
+                uiText.text = string.Format("Lv. {0:F0}", GameManager.instance.player.level);
+
+                break;
+            case InfomationType.TotalTimer:
+                int minutes = Mathf.FloorToInt(GameManager.instance.timer / 60);
+                int seconds = Mathf.FloorToInt(GameManager.instance.timer % 60);
+                uiText.text = string.Format("{0:D2}:{1:D2}", minutes, seconds);
+                break;
+            case InfomationType.Kill:
+                uiText.text = string.Format("{0}", GameManager.instance.kill);
+                break;
+
         }
 
     }

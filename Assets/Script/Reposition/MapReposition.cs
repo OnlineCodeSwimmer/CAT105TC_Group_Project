@@ -5,10 +5,10 @@ using UnityEngine;
 public class MapReposition : MonoBehaviour
 {
     public Vector3 playerPosition;
-    public float differenceX;
-    public float differenceY;
-    public float directionX;
-    public float directionY;
+    private float differenceX;
+    private float differenceY;
+    private float directionX;
+    private float directionY;
 
     private void OnTriggerExit2D(Collider2D collision)
     {

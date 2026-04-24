@@ -8,14 +8,14 @@ public class Goblin : MonoBehaviour
 {
 
     //Goblin Monster System
-    [Header("Basic Data")]
-    public MonsterSO BasicData;
     [Header("Variables")]
+    private float speed;
+    private float damage;
     public float currenthealth;
     public bool isHurt;
     private bool isLive;
     [Header("Transform")]
-    public Transform target;
+    private Transform target;
     [Header("Components")]
     private Animator animator;
     private Rigidbody2D rb;
@@ -28,14 +28,13 @@ public class Goblin : MonoBehaviour
         rb=gameObject.GetComponent<Rigidbody2D>();
     }
 
-    public void OnEnable()
+    private void OnEnable()
     {
-        animator.SetBool("Dead", false);
         gameObject.layer = LayerMask.NameToLayer("Enemy");
         target = GameManager.instance.player.transform;
         isLive = true;
         isHurt= false;
-        currenthealth = BasicData.maxHealth;
+       
     }
     private void FixedUpdate()
     {
@@ -45,7 +44,7 @@ public class Goblin : MonoBehaviour
     public void Move()
     {
         Vector2 dirction = (target.position - transform.position).normalized;
-        rb.velocity = dirction * BasicData.speed;
+        rb.velocity = dirction * speed;
         if (dirction.x > 0)
             spriteRenderer.flipX = false;
         if (dirction.x < 0)
@@ -71,6 +70,8 @@ public class Goblin : MonoBehaviour
                 gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
                 rb.velocity = Vector2.zero;
                 animator.SetTrigger("Dead");
+                GameManager.instance.player.GetExp();
+                GameManager.instance.kill++;
             }
        }
     }
@@ -82,8 +83,16 @@ public class Goblin : MonoBehaviour
         rb.AddForce(directionVector.normalized * 3, ForceMode2D.Impulse);
     }
 
+
+    public void Init(float maxHealth,float speed,float damage)
+    {
+        currenthealth = maxHealth;
+        this.speed = speed;
+        this.damage = damage;
+    }
     public void Dead()
     {
+        spriteRenderer.color = Color.white;
         gameObject.SetActive(false);
     }
 }

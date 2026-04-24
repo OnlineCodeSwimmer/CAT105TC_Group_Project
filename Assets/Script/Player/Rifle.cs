@@ -22,7 +22,8 @@ public class Rifle : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        animator=GetComponent<Animator>();
+        maxBulletNumber = 5;
+        animator =GetComponent<Animator>();
         muzzle = transform.Find("Muzzle");
         shellPosition = transform.Find("Shell");
 
