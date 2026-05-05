@@ -2,14 +2,16 @@ using UnityEngine;
 
 public class Rifle : MonoBehaviour
 {
-    [Header("Variables")]
-    public float interval;
+    [Header("Shoot Parameter")]
+    public float interval; //FireRate
     private float shootTimer;
     public  float maxReloadTime;
-    private float reloadTimer;
+    public float reloadTimer;
+    public float bulletDamage;
     public int maxBulletNumber;
     public int currentbulletNumber;
-    private bool isReload;
+    public bool isReload;
+    [Header("Mouse Related Parameter")]
     private Vector2 mousePosition;
     private Vector2 direction;
     [Header("Components")]
@@ -19,11 +21,12 @@ public class Rifle : MonoBehaviour
     private Transform shellPosition;
     private Animator animator;
 
-    // Start is called before the first frame update
+    public void Awake()
+    {
+            animator = GetComponent<Animator>();
+    }
     private void Start()
     {
-        maxBulletNumber = 5;
-        animator =GetComponent<Animator>();
         muzzle = transform.Find("Muzzle");
         shellPosition = transform.Find("Shell");
 
@@ -79,6 +82,7 @@ public class Rifle : MonoBehaviour
         animator.SetTrigger("Shoot");
         GameObject bullet = GameManager.instance.poolManager.Get(0);
         bullet.GetComponent<Bullet>().SetSpeed(direction);//Call the flight function of the bullet
+        bullet.GetComponent<Bullet>().damage = bulletDamage;
         bullet.transform.position= muzzle.position;
         GameObject shell=GameManager.instance.poolManager.Get(1);
         shell.transform.position = shellPosition.position;
@@ -90,7 +94,6 @@ public class Rifle : MonoBehaviour
         {
             isReload = true;
             reloadTimer -= Time.deltaTime;
-            Debug.Log("IsReload");
         }
         if(reloadTimer <= 0)
         {

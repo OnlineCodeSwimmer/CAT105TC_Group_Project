@@ -4,65 +4,64 @@ using System.ComponentModel;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Goblin : MonoBehaviour
 {
-
     //Goblin Monster System
-    [Header("Variables")]
-    private float speed;
-    private float damage;
+
+    [Header("Move Parameter")]
+    public Vector2 moveDirection;
+ 
+    [Header("State Parameter")]
+    protected float speed;
     public float currenthealth;
-    public bool isHurt;
-    private bool isLive;
+    protected bool isLive;
     [Header("Transform")]
-    private Transform target;
+    protected Transform target;
     [Header("Components")]
-    private Animator animator;
-    private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
+    protected Animator animator;
+    public Rigidbody2D rb;
+    protected SpriteRenderer spriteRenderer;
+    protected KnockBack knockBack;
 
     private void Awake()
     {
-        animator= GetComponent<Animator>();
+        knockBack=GetComponent<KnockBack>();
+        animator = GetComponent<Animator>();
         spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
         rb=gameObject.GetComponent<Rigidbody2D>();
     }
 
-    private void OnEnable()
+    public virtual void OnEnable()
     {
-        gameObject.layer = LayerMask.NameToLayer("Enemy");
+        gameObject.layer = LayerMask.NameToLayer("GroundEnemy");
         target = GameManager.instance.player.transform;
         isLive = true;
-        isHurt= false;
        
     }
-    private void FixedUpdate()
+
+    public virtual void FixedUpdate()
     {
-        if (!isHurt&&isLive)
+        if (!knockBack.isKnockedBack && isLive)
         Move();
     }
-    public void Move()
-    {
-        Vector2 dirction = (target.position - transform.position).normalized;
-        rb.velocity = dirction * speed;
-        if (dirction.x > 0)
-            spriteRenderer.flipX = false;
-        if (dirction.x < 0)
-            spriteRenderer.flipX = true;
-    }
 
-    public void OnTriggerEnter2D(Collider2D collision)
+
+
+
+    public virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bullet"))
-       {
-            currenthealth -= collision.GetComponent<Bullet>().damage;
+        {
+            currenthealth -= collision.GetComponent<Bullet>().damage; //damage detection
             if (currenthealth > 0)
             {
 
                 rb.velocity = Vector2.zero;
                 animator.SetTrigger("Hurt");
-                KnockBack();
-                isHurt = true;
+                Vector3 playerPosition = GameManager.instance.player.transform.position;
+                Vector2 knockbackDirection = (transform.position - playerPosition).normalized;
+                knockBack.KnockBackTrigger(knockbackDirection,1);
             }
             else
             {
@@ -70,29 +69,41 @@ public class Goblin : MonoBehaviour
                 gameObject.layer = LayerMask.NameToLayer("DeadEnemy");
                 rb.velocity = Vector2.zero;
                 animator.SetTrigger("Dead");
-                GameManager.instance.player.GetExp();
+                SpawnExpOrbs();
                 GameManager.instance.kill++;
             }
-       }
+        }
     }
 
-    public void KnockBack()
+
+    public virtual void Move()
     {
-        Vector3 playerPosition = GameManager.instance.player.transform.position;
-        Vector3 directionVector = transform.position - playerPosition;
-        rb.AddForce(directionVector.normalized * 3, ForceMode2D.Impulse);
+        moveDirection = (target.position - transform.position).normalized;
+        rb.velocity = moveDirection * speed;
+        if (moveDirection.x > 0)
+            spriteRenderer.flipX = false;
+        if (moveDirection.x < 0)
+            spriteRenderer.flipX = true;
     }
+
+
+
 
 
     public void Init(float maxHealth,float speed,float damage)
     {
         currenthealth = maxHealth;
         this.speed = speed;
-        this.damage = damage;
     }
     public void Dead()
     {
         spriteRenderer.color = Color.white;
         gameObject.SetActive(false);
     }
-}
+    protected void SpawnExpOrbs()
+    {
+        GameObject lootExp = GameManager.instance.poolManager.Get(4);
+        lootExp.transform.position= transform.position;
+    }
+        
+    }

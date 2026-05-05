@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2229517571670808826}
   - component: {fileID: 2404744881556362079}
   - component: {fileID: 54269324745391235}
+  - component: {fileID: -8222210321885747636}
   m_Layer: 6
   m_Name: Goblin
   m_TagString: Enemy
@@ -101,7 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currenthealth: 0
-  isHurt: 0
+  rb: {fileID: 0}
 --- !u!50 &2229517571670808826
 Rigidbody2D:
   serializedVersion: 4
@@ -185,3 +186,17 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-8222210321885747636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5231351942734121726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c0f4af45a02e744e90812cf0ca79efe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  isKnockedBack: 0

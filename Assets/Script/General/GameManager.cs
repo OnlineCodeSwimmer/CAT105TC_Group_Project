@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     public Player player;
     public PoolManager poolManager;
     public Rifle rifle;
+    public LevelUpSystem levelUpSystem;
+    public Spawner spawner;
     public static GameManager instance; //Static members can be accessed from other scripts without creating an instance.
     [Header("Variables")]
     public int kill;
@@ -27,5 +29,14 @@ public class GameManager : MonoBehaviour
             timer = 0;
         }
     }
+    public void Stop()
+    {
+        Time.timeScale = 0;
+    }
+    public void Resume()
+    {
+        Time.timeScale = 1;
+    }
+
 
 }

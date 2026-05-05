@@ -5,28 +5,34 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     public float speed;
-    public float damage = 5;
+    public float damage;
     private Rigidbody2D rb;
     public void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
+
+
+
     void Update()
     {
         FarToDestory(); //The bullet detonates after traveling a certain distance.
     }
+
     public void SetSpeed(Vector2 direction)
     {
         rb.velocity = direction * speed;
     }
+
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
        GameObject explosion= GameManager.instance.poolManager.Get(2);
         explosion.transform.position = transform.position;
         gameObject.SetActive(false);
     }
+
 
     public void FarToDestory() 
     {

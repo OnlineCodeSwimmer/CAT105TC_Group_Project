@@ -11,7 +11,8 @@ public class HUD : MonoBehaviour
         Exp,
         Level,
         Kill,
-        TotalTimer
+        TotalTimer,
+        Heart
     }
     public InfomationType type;
     private Text uiText;
@@ -19,8 +20,8 @@ public class HUD : MonoBehaviour
 
     private void Awake()
     {
-       uiText = GetComponent<Text>();
-       uiSlider = GetComponent<Slider>();
+       uiText = GetComponentInChildren<Text>();
+       uiSlider = GetComponentInChildren<Slider>(true);
     }
     private void LateUpdate()
     {
@@ -30,6 +31,16 @@ public class HUD : MonoBehaviour
                 int currentBullet = GameManager.instance.rifle.currentbulletNumber;
                 int maxBullet = GameManager.instance.rifle.maxBulletNumber;
                 uiText.text = string.Format("{0}/{1}", currentBullet, maxBullet);
+                if (GameManager.instance.rifle.isReload)
+                {
+                    uiSlider.gameObject.SetActive(true);
+                    float progress = (GameManager.instance.rifle.maxReloadTime - GameManager.instance.rifle.reloadTimer) / GameManager.instance.rifle.maxReloadTime;
+                    uiSlider.value = progress;
+                }
+                else
+                {
+                    uiSlider.gameObject.SetActive(false);
+                }
                 break;
             case InfomationType.Exp:
                 float currentExp= GameManager.instance.player.currentExp;
@@ -47,6 +58,10 @@ public class HUD : MonoBehaviour
                 break;
             case InfomationType.Kill:
                 uiText.text = string.Format("{0}", GameManager.instance.kill);
+                break;
+
+            case InfomationType.Heart:
+                uiText.text = string.Format("{0}/{1}", GameManager.instance.player.currentHP, GameManager.instance.player.maxHP);
                 break;
 
         }
