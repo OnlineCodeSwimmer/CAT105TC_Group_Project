@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapReposition : MonoBehaviour
 {
-    public Vector3 playerPosition;
+    private Vector3 playerPosition;
     private float differenceX;
     private float differenceY;
     private float directionX;
@@ -12,14 +12,17 @@ public class MapReposition : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Ground") {
+        if (collision.tag == "Ground")
+        {
             playerPosition = GameManager.instance.player.transform.position;
-            differenceX = Mathf.Abs(playerPosition.x - collision.transform.position.x);
-            differenceY = Mathf.Abs(playerPosition.y - collision.transform.position.y);
+            differenceX = playerPosition.x - collision.transform.position.x;
+            differenceY = playerPosition.y - collision.transform.position.y;
 
-            directionX = GameManager.instance.player.moveDirection.x < 0 ? -1 : 1;
-            directionY = GameManager.instance.player.moveDirection.y < 0 ? -1 : 1;
+            directionX = differenceX < 0 ? -1 : 1;
+            directionY = differenceY < 0 ? -1 : 1;
 
+            differenceX = Mathf.Abs(differenceX);
+            differenceY = Mathf.Abs(differenceY);
             if (differenceX > differenceY)
             {
                 collision.transform.Translate(Vector3.right * directionX * 80);

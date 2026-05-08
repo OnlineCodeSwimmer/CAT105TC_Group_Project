@@ -6,14 +6,14 @@ public class MonsterRePosition : MonoBehaviour
 {
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("FlyEnemy"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("FlyEnemy"))
         {
             collision.gameObject.SetActive(false);
         }
-        
-        if(collision.CompareTag("Enemy"))
+
+        if (collision.CompareTag("Enemy"))
         {
-            collision.transform.Translate(GameManager.instance.player.moveDirection * 35 + new Vector2(Random.Range(3f, -3f), Random.Range(3f, -3f)));
+            collision.transform.Translate(GameManager.instance.player.moveDirection * 28 + new Vector2(Random.Range(1f, -1f), Random.Range(1f, -1f)));
         }
     }
 }
