@@ -45,7 +45,7 @@ public class FloatingJellyfish : Goblin
     void FireBullet()
     {
         Vector2 targetDirection = (GameManager.instance.player.transform.position - transform.position).normalized;
-         interval -= Time.deltaTime;
+        interval -= Time.deltaTime;
         if (interval <= 0)
         {
             interval = FireRate;
